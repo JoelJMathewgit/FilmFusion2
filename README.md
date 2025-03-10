@@ -1,4 +1,4 @@
-Clone the repository using `git clone https://github.com/shahsyed4/film-fusion.git`.  
+Clone the repository using `git clone https://github.com/JoelJMathewgit/FilmFusion2.git`.  
 
 Navigate to the project folder with `cd film-fusion`.  
 
