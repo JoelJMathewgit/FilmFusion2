@@ -1,6 +1,6 @@
 Clone the repository using `git clone https://github.com/JoelJMathewgit/FilmFusion2.git`.  
 
-Navigate to the project folder with `cd film-fusion`.  
+Navigate to the project folder with `cd FilmFusion2`.  
 
 Install dependencies by running `npm install`.  
 
