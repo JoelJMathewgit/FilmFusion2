@@ -8,4 +8,5 @@ Start the development server using `npm run dev`.
 
 Open the application in a browser at `http://localhost:5173/`.
 
-Demo: https://github.com/user-attachments/assets/9bc7827b-fc4d-4239-82b6-94941c3e76c0
+Demo: https://github.com/user-attachments/assets/6962e846-43d2-4575-82f2-577ca70aa2f4
+
