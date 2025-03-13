@@ -10,6 +10,10 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 18;
+  const [showLogin, setShowLogin] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -51,6 +55,15 @@ function App() {
     if (newPage < 1 || newPage > totalPages) return;
     setCurrentPage(newPage);
   };
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    setLoggedInUser(loginUsername);
+    setShowLogin(false);
+    setLoginUsername('');
+    setLoginPassword('');
+  };
+  
 
   let content;
   if (isLoading) {
@@ -96,29 +109,65 @@ function App() {
 
   return (
     <div>
-      <header>
-        <h1>Film Fusion</h1>
-      </header>
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search movies..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+    <header style={{ position: 'relative' }}>
+      <h1>Film Fusion</h1>
+      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+        {loggedInUser ? (
+          <button>{loggedInUser}</button>
+        ) : (
+          <button onClick={() => setShowLogin(true)}>Login</button>
+        )}
       </div>
-      <div className="grid-container">
-        {content}
+    </header>
+    <div className="search-container">
+      <input
+        type="text"
+        placeholder="Search movies..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+    <div className="grid-container">
+      {content}
+    </div>
+    {!isLoading && filteredMovies.length > 0 && (
+      <div className="pagination">
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
-      {!isLoading && filteredMovies.length > 0 && (
-        <div className="pagination">
-          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-            Previous
-          </button>
-          <span>Page {currentPage} of {totalPages}</span>
-          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-            Next
-          </button>
+      )}
+      {showLogin && (
+        <div className="login-modal">
+          <div className="login-container">
+            <h2>Login</h2>
+            <form onSubmit={handleLoginSubmit}>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit">Login</button>
+            </form>
+            <button onClick={() => setShowLogin(false)}>Cancel</button>
+          </div>
         </div>
       )}
     </div>
