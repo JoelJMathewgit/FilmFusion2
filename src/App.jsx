@@ -8,6 +8,8 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const moviesPerPage = 18;
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -28,6 +30,15 @@ function App() {
     movie.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
+  const indexOfLastMovie = currentPage * moviesPerPage;
+  const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+  const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
+
   const handleClick = (movie) => {
     if (selectedMovieId === movie.id) {
       setSelectedMovieId(null);
@@ -36,11 +47,16 @@ function App() {
     }
   };
 
+  const handlePageChange = (newPage) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setCurrentPage(newPage);
+  };
+
   let content;
   if (isLoading) {
     content = <p>Loading movies...</p>;
   } else if (filteredMovies.length > 0) {
-    content = filteredMovies.map((movie) => {
+    content = currentMovies.map((movie) => {
       let movieContent;
       if (selectedMovieId === movie.id) {
         let plotText;
@@ -94,6 +110,17 @@ function App() {
       <div className="grid-container">
         {content}
       </div>
+      {!isLoading && filteredMovies.length > 0 && (
+        <div className="pagination">
+          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }
