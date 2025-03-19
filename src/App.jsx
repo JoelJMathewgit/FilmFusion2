@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { db } from './firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebase';
+import Header from './components/Header';
+import SearchBar from './components/SearchBar';
+import MovieCard from './components/MovieCard';
+import Pagination from './components/Pagination';
+import LoginModal from './components/LoginModal';
 import './styles.css';
 
 function App() {
@@ -63,112 +68,42 @@ function App() {
     setLoginUsername('');
     setLoginPassword('');
   };
-  
 
   let content;
   if (isLoading) {
     content = <p>Loading movies...</p>;
   } else if (filteredMovies.length > 0) {
-    content = currentMovies.map((movie) => {
-      let movieContent;
-      if (selectedMovieId === movie.id) {
-        let plotText;
-        if (movie.plot) {
-          plotText = movie.plot;
-        } else {
-          plotText = "No additional information available.";
-        }
-
-        movieContent = (
-          <div className="movie-details">
-            <h3>{movie.title} ({movie.year})</h3>
-            <img src={movie.poster} alt={movie.title} />
-            <p>{plotText}</p>
-            <p><strong>Rating:</strong> {movie.rating}</p>
-            <button onClick={() => setSelectedMovieId(null)}>Back</button>
-          </div>
-        );
-      } else {
-        movieContent = (
-          <div>
-            <img src={movie.poster} alt={movie.title} />
-            <p>{movie.title}</p>
-            <button onClick={() => handleClick(movie)}>Show Details</button>
-          </div>
-        );
-      }
-      return (
-        <div className="movie-card" key={movie.id}>
-          {movieContent}
-        </div>
-      );
-    });
+    content = currentMovies.map(movie => (
+      <MovieCard
+        key={movie.id}
+        movie={movie}
+        selectedMovieId={selectedMovieId}
+        handleClick={handleClick}
+      />
+    ));
   } else {
     content = <p>No movies found.</p>;
   }
 
   return (
     <div>
-    <header style={{ position: 'relative' }}>
-      <h1>Film Fusion</h1>
-      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-        {loggedInUser ? (
-          <button>{loggedInUser}</button>
-        ) : (
-          <button onClick={() => setShowLogin(true)}>Login</button>
-        )}
+      <Header loggedInUser={loggedInUser} setShowLogin={setShowLogin} />
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <div className="grid-container">
+        {content}
       </div>
-    </header>
-    <div className="search-container">
-      <input
-        type="text"
-        placeholder="Search movies..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-    </div>
-    <div className="grid-container">
-      {content}
-    </div>
-    {!isLoading && filteredMovies.length > 0 && (
-      <div className="pagination">
-        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-          Previous
-        </button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-          Next
-        </button>
-      </div>
+      {!isLoading && filteredMovies.length > 0 && (
+        <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
       )}
       {showLogin && (
-        <div className="login-modal">
-          <div className="login-container">
-            <h2>Login</h2>
-            <form onSubmit={handleLoginSubmit}>
-              <div>
-                <input
-                  type="text"
-                  placeholder="Username"
-                  value={loginUsername}
-                  onChange={(e) => setLoginUsername(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <button type="submit">Login</button>
-            </form>
-            <button onClick={() => setShowLogin(false)}>Cancel</button>
-          </div>
-        </div>
+        <LoginModal
+          loginUsername={loginUsername}
+          loginPassword={loginPassword}
+          setLoginUsername={setLoginUsername}
+          setLoginPassword={setLoginPassword}
+          handleLoginSubmit={handleLoginSubmit}
+          setShowLogin={setShowLogin}
+        />
       )}
     </div>
   );
