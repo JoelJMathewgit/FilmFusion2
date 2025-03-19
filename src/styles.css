@@ -74,3 +74,23 @@ header {
     border-radius: 4px;
     width: 300px;
   }
+
+/* Custom Pagination Button Colors */
+.custom-pagination-button {
+    background-color: #ff6347 !important; /* Tomato Red */
+    color: white !important; /* White Text */
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-pagination-button:hover {
+    background-color: #ff4500 !important; /* Darker Red */
+  }
+  
+  /* Active Page Button */
+  .custom-pagination-active {
+    background-color: #007bff !important; /* Blue */
+    color: white !important;
+    font-weight: bold;
+  }
+  
