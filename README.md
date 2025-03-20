@@ -2,9 +2,7 @@ Clone the repository using `git clone https://github.com/JoelJMathewgit/FilmFusi
 
 Navigate to the project folder with `cd FilmFusion2`.  
 
-Install dependencies by running `npm install`.  
-
-Start the development server using `npm run dev`.  
+Type "run.bat" into the terminal.
 
 Open the application in a browser at `http://localhost:5174/`.
 
