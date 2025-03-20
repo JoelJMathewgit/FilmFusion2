@@ -8,31 +8,46 @@ const LoginModal = ({
   handleLoginSubmit,
   setShowLogin
 }) => (
-  <div className="login-modal">
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleLoginSubmit}>
-        <div>
-          <input
-            type="text"
-            placeholder="Username"
-            value={loginUsername}
-            onChange={(e) => setLoginUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Password"
-            value={loginPassword}
-            onChange={(e) => setLoginPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <button onClick={() => setShowLogin(false)}>Cancel</button>
+  <div className="modal is-active">
+    <div className="modal-background" onClick={() => setShowLogin(false)}></div>
+    <div className="modal-card">
+      <header className="modal-card-head">
+        <p className="modal-card-title">Login</p>
+        <button className="delete" aria-label="close" onClick={() => setShowLogin(false)}></button>
+      </header>
+      <section className="modal-card-body">
+        <form onSubmit={handleLoginSubmit}>
+          <div className="field">
+            <label className="label">Username</label>
+            <div className="control">
+              <input
+                className="input"
+                type="text"
+                placeholder="Enter username"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="field">
+            <label className="label">Password</label>
+            <div className="control">
+              <input
+                className="input"
+                type="password"
+                placeholder="Enter password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <button className="button is-primary" type="submit">Login</button>
+        </form>
+      </section>
     </div>
   </div>
 );
