@@ -22,9 +22,13 @@ function App() {
     setLoginPassword('');
   };
 
+  const handleLogout = () => {
+    setLoggedInUser(null);
+  };
+
   return (
     <Router>
-      <Header loggedInUser={loggedInUser} setShowLogin={setShowLogin} setShowSignup={setShowSignup} />
+      <Header loggedInUser={loggedInUser} setShowLogin={setShowLogin} setShowSignup={setShowSignup} handleLogout={handleLogout}/>
 
       <Routes>
         <Route path="/" element={<HomePage />} />

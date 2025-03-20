@@ -1,7 +1,10 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Header = ({ loggedInUser, setShowLogin, setShowSignup }) => {
+const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => {
+  const [dropdownActive, setDropdownActive] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <nav className="navbar is-light" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
@@ -40,9 +43,47 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup }) => {
           <div className="navbar-item">
             <div className="buttons">
               {loggedInUser ? (
-                <button className="button is-primary">
-                  <strong>{loggedInUser}</strong>
-                </button>
+                <div className={`dropdown ${dropdownActive ? 'is-active' : ''}`}>
+                  <div className="dropdown-trigger">
+                    <button 
+                      className="button is-primary" 
+                      aria-haspopup="true" 
+                      aria-controls="dropdown-menu"
+                      onClick={() => setDropdownActive(!dropdownActive)}
+                    >
+                      <span><strong>{loggedInUser}</strong></span>
+                      <span className="icon is-small">
+                        <i className="fas fa-angle-down" aria-hidden="true"></i>
+                      </span>
+                    </button>
+                  </div>
+                  <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                    <div className="dropdown-content">
+                      <a
+                        href="#"
+                        className="dropdown-item"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleLogout();
+                          setDropdownActive(false);
+                          navigate('/');
+                        }}
+                      >
+                        Logout
+                      </a>
+                      <a
+                        href="#"
+                        className="dropdown-item"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setDropdownActive(false);
+                        }}
+                      >
+                        Favorite Movies
+                      </a>  
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <>
                   <button className="button is-light" onClick={() => setShowLogin(true)}>
