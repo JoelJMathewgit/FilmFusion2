@@ -10,7 +10,11 @@ function MoviesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedMovie, setSelectedMovie] = useState(null); // Store entire movie object
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [sortMethod, setSortMethod] = useState(null);
+
+  // For dropdown toggle
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const moviesPerPage = 18;
 
@@ -29,12 +33,35 @@ function MoviesPage() {
     fetchMovies();
   }, []);
 
-  // Filter by search term
-  const filteredMovies = movies.filter(movie =>
+  // Toggle dropdown
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Handle sorting
+  const handleSort = (method) => {
+    setSortMethod(method);
+    setIsDropdownOpen(false); // Close dropdown after selection
+    setCurrentPage(1);        // Reset to page 1 when sorting changes
+  };
+
+  // 1) Filter by search term
+  let filteredMovies = movies.filter(movie =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination calculations
+  // 2) Sort based on the chosen method
+  if (sortMethod === 'az') {
+    filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
+  } else if (sortMethod === 'za') {
+    filteredMovies.sort((a, b) => b.title.localeCompare(a.title));
+  } else if (sortMethod === 'earliest') {
+    filteredMovies.sort((a, b) => Number(a.year) - Number(b.year)); // Earliest to Latest
+  } else if (sortMethod === 'latest') {
+    filteredMovies.sort((a, b) => Number(b.year) - Number(a.year)); // Latest to Earliest
+  }
+
+  // 3) Pagination
   const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
   const indexOfLastMovie = currentPage * moviesPerPage;
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
@@ -42,7 +69,45 @@ function MoviesPage() {
 
   return (
     <div className="container">
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      {/* Search Bar (bigger, above) */}
+      <div className="field" style={{ marginBottom: '1rem' }}>
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      </div>
+
+      {/* Filter Button (below search bar, aligned right) */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+        <div className={`dropdown ${isDropdownOpen ? 'is-active' : ''}`}>
+          <div className="dropdown-trigger">
+            <button
+              className="button is-medium"
+              aria-haspopup="true"
+              aria-controls="dropdown-menu"
+              onClick={toggleDropdown}
+            >
+              <span>Filter</span>
+              <span className="icon is-small">
+                <i className="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+          <div className="dropdown-menu" id="dropdown-menu" role="menu">
+            <div className="dropdown-content">
+              <button className="dropdown-item" onClick={() => handleSort('az')}>
+                A–Z
+              </button>
+              <button className="dropdown-item" onClick={() => handleSort('za')}>
+                Z–A
+              </button>
+              <button className="dropdown-item" onClick={() => handleSort('earliest')}>
+                Earliest to Latest
+              </button>
+              <button className="dropdown-item" onClick={() => handleSort('latest')}>
+                Latest to Earliest
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {isLoading ? (
         <p>Loading movies...</p>
@@ -53,7 +118,7 @@ function MoviesPage() {
               <MovieCard
                 key={movie.id}
                 movie={movie}
-                handleClick={() => setSelectedMovie(movie)} // Open modal with movie data
+                handleClick={() => setSelectedMovie(movie)}
               />
             ))}
           </div>
@@ -74,7 +139,7 @@ function MoviesPage() {
           <div className="modal-content box">
             <h2 className="title">{selectedMovie.title || "No Title Available"}</h2>
             <p><strong>Rating:</strong> {selectedMovie.rating || "N/A"}</p>
-            <p><strong>Release Year:</strong> {selectedMovie.releaseDate || "Unknown"}</p>
+            <p><strong>Year:</strong> {selectedMovie.year || "Unknown"}</p>
             <p><strong>Plot:</strong> {selectedMovie.plot || "No description available."}</p>
             <button className="button is-danger" onClick={() => setSelectedMovie(null)}>Close</button>
           </div>
