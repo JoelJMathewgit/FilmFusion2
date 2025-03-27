@@ -8,7 +8,7 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
   return (
     <nav className="navbar is-light" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <Link className="navbar-item" to="/home">
+        <Link className="navbar-item" to="/">
           <svg width="120" height="30" viewBox="0 0 640 160" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" clipRule="evenodd" d="M0 110L10 40L50 0L100 50L70 80L110 120L50 160L0 110Z" fill="#00D1B2"/>
           </svg>
@@ -34,8 +34,8 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
       {/* Navbar Menu */}
       <div id="navbarBasicExample" className="navbar-menu">
         <div className="navbar-start">
-          <Link className="navbar-item" to="/home">Home</Link>
-          <Link className="navbar-item" to="/">Movies</Link>
+          <Link className="navbar-item" to="/">Home</Link>
+          <Link className="navbar-item" to="/movies">Movies</Link>
         </div>
 
         {/* Right Side - Login & Sign Up */}
