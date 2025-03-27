@@ -31,8 +31,8 @@ function App() {
       <Header loggedInUser={loggedInUser} setShowLogin={setShowLogin} setShowSignup={setShowSignup} handleLogout={handleLogout}/>
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/movies" element={<MoviesPage />} />
+        <Route path="/" element={<MoviesPage />} />
+        <Route path="/home" element={<HomePage />} />
       </Routes>
 
       {/* Login & Sign Up Modals */}
