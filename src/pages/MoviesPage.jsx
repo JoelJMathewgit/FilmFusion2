@@ -67,6 +67,15 @@ function MoviesPage() {
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
   const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
 
+  const handleToggleMovie = (movie) => {
+    if (selectedMovie && selectedMovie.id === movie.id){
+      setSelectedMovie(null)
+    }
+    else{
+      setSelectedMovie(movie);
+    }
+  }
+
   return (
     <div className="container">
       {/* Search Bar (bigger, above) */}
@@ -118,7 +127,8 @@ function MoviesPage() {
               <MovieCard
                 key={movie.id}
                 movie={movie}
-                handleClick={() => setSelectedMovie(movie)}
+                selectedMovieId={selectedMovie ? selectedMovie.id : null}
+                handleClick={() => handleToggleMovie(movie)}
               />
             ))}
           </div>
@@ -130,20 +140,6 @@ function MoviesPage() {
         </>
       ) : (
         <p>No movies found.</p>
-      )}
-
-      {/* Movie Details Modal */}
-      {selectedMovie && (
-        <div className="modal is-active">
-          <div className="modal-background" onClick={() => setSelectedMovie(null)}></div>
-          <div className="modal-content box">
-            <h2 className="title">{selectedMovie.title || "No Title Available"}</h2>
-            <p><strong>Rating:</strong> {selectedMovie.rating || "N/A"}</p>
-            <p><strong>Year:</strong> {selectedMovie.year || "Unknown"}</p>
-            <p><strong>Plot:</strong> {selectedMovie.plot || "No description available."}</p>
-            <button className="button is-danger" onClick={() => setSelectedMovie(null)}>Close</button>
-          </div>
-        </div>
       )}
     </div>
   );
