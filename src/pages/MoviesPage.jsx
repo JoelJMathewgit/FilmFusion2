@@ -128,7 +128,7 @@ function MoviesPage() {
                 key={movie.id}
                 movie={movie}
                 selectedMovieId={selectedMovie ? selectedMovie.id : null}
-                handleClick={() => handleToggleMovie(movie)}
+                handleClick={() => setSelectedMovie(movie)}
               />
             ))}
           </div>
@@ -140,6 +140,20 @@ function MoviesPage() {
         </>
       ) : (
         <p>No movies found.</p>
+      )}
+      {selectedMovie && (
+        <div className="modal is-active">
+          <div className="modal-background" onClick={() => setSelectedMovie(null)}></div>
+          <div className="modal-content box">
+            <h2 className="title has-text-black">
+              {selectedMovie.title || "No Title Available"}
+            </h2>
+            <p><strong>Rating:</strong> {selectedMovie.rating || "N/A"}</p>
+            <p><strong>Year:</strong> {selectedMovie.year || "Unknown"}</p>
+            <p><strong>Plot:</strong> {selectedMovie.plot || "No description available."}</p>
+            <button className="button is-danger" onClick={() => setSelectedMovie(null)}>Close</button>
+          </div>
+        </div>
       )}
     </div>
   );
