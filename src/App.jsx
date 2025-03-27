@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
+import FavoritesPage from './pages/FavoritesPage';
 import LoginModal from './components/LoginModal'; // Import Login Modal
 import SignupModal from './components/SignupModal'; // Import Signup Modal
 import './styles.css';
@@ -31,8 +32,9 @@ function App() {
       <Header loggedInUser={loggedInUser} setShowLogin={setShowLogin} setShowSignup={setShowSignup} handleLogout={handleLogout}/>
 
       <Routes>
-        <Route path="/" element={<MoviesPage />} />
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} /> 
+        <Route path="/movies" element={<MoviesPage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
       </Routes>
 
       {/* Login & Sign Up Modals */}
