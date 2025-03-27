@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth, db, collection, addDoc } from '../firebase';
 
+
 const SIgnupModal = ({ setShowSignup }) => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,8 +18,12 @@ const SIgnupModal = ({ setShowSignup }) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      await updateProfile(user, { displayName: username });
+      await user.reload();
+      const updatedUser = auth.currentUser;
       await addDoc(collection(db, 'users'), {
         uid: user.uid,
+        username: updatedUser.displayName,
         email: user.email,
         createdAt: new Date()
       });
@@ -39,6 +45,17 @@ const SIgnupModal = ({ setShowSignup }) => {
         </header>
         <section className="modal-card-body">
           <form onSubmit={handleSignup}>
+          <div className="field">
+          <label className="label">Username</label>
+          <input
+            className="input"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter Username"
+            required
+          />
+        </div>
             <div className="field">
               <label className="label">Email</label>
               <input
@@ -46,6 +63,7 @@ const SIgnupModal = ({ setShowSignup }) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter Email"
                 required
               />
             </div>
@@ -57,6 +75,7 @@ const SIgnupModal = ({ setShowSignup }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter Password"
                 required
               />
             </div>

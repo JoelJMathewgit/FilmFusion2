@@ -14,7 +14,7 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      setLoggedInUser(user.email); 
+      setLoggedInUser(user.displayName || user.email); 
       setShowLogin(false); 
     } catch (error) {
       setError(error.message || 'Invalid credentials or user does not exist');
@@ -38,6 +38,7 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter Email"
                 required
               />
             </div>
@@ -49,6 +50,7 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter Password"
                 required
               />
             </div>
