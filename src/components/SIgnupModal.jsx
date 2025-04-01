@@ -83,7 +83,12 @@ const SIgnupModal = ({ setShowSignup }) => {
             {error && <p className="has-text-danger">{error}</p>}
             {success && <p className="has-text-success">{success}</p>}
 
-            <button className="button is-primary" type="submit">Sign Up</button>
+            <button className="button is-primary" type="submit"
+            style={{ 
+              backgroundColor: '#E1544B', 
+              borderColor: '#E1544B', 
+              color: 'white',
+            }}>Sign Up</button>
           </form>
         </section>
       </div>

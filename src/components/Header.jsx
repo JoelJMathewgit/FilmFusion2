@@ -9,11 +9,13 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
     <nav className="navbar is-light" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
         <Link className="navbar-item" to="/">
-          <svg width="120" height="30" viewBox="0 0 640 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd" clipRule="evenodd" d="M0 110L10 40L50 0L100 50L70 80L110 120L50 160L0 110Z" fill="#00D1B2"/>
-          </svg>
-          <strong>Film Fusion</strong>
+          <img 
+            src="/film-fusion-logo.png" 
+            alt="Film Fusion Logo" 
+            style={{ height: '500px' }} 
+          />
         </Link>
+
 
         {/* Mobile Navbar Toggle */}
         <button
@@ -46,10 +48,15 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
                 <div className={`dropdown ${dropdownActive ? 'is-active' : ''}`}>
                   <div className="dropdown-trigger">
                     <button 
-                      className="button is-primary" 
+                      className="button" 
                       aria-haspopup="true" 
                       aria-controls="dropdown-menu"
                       onClick={() => setDropdownActive(!dropdownActive)}
+                      style={{ 
+                        backgroundColor: '#E1544B', 
+                        borderColor: '#E1544B', 
+                        color: 'white',
+                      }}
                     >
                       <span><strong>{loggedInUser}</strong></span>
                       <span className="icon is-small">
@@ -87,10 +94,22 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
                 </div>
               ) : (
                 <>
-                  <button className="button is-light" onClick={() => setShowLogin(true)}>
+                  <button 
+                    className="button is-light"
+                    onClick={() => setShowLogin(true)}
+                  >
                     Log in
                   </button>
-                  <button className="button is-primary" onClick={() => setShowSignup(true)}>
+
+                  <button 
+                    className="button"
+                    style={{ 
+                      backgroundColor: '#E1544B', 
+                      borderColor: '#E1544B', 
+                      color: 'white',
+                    }}
+                    onClick={() => setShowSignup(true)}
+                  >
                     Sign up
                   </button>
                 </>

@@ -29,14 +29,42 @@ function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="hero is-large is-info">
-        <div className="hero-body">
-          <p className="title has-text-black">Film Fusion</p>
-          <p className="subtitle has-text-black">
+      <div 
+        style={{
+          backgroundImage: 'url("/hero-background.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '70vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          padding: 0,           
+          margin: 0,              
+          width: '100%'                
+        }}
+      >
+        <div 
+          style={{
+            maxWidth: '600px',
+            textAlign: 'left',
+            paddingLeft: '10vw'
+          }}
+        >
+          <img 
+            src="/film-fusion-hero-logo.png" 
+            alt="Film Fusion Hero Logo"
+            style={{ maxWidth: '600px', width: '100%', display: 'block'}}
+          />
+          <p 
+            className="subtitle has-text-white mt-6"
+            style={{ fontSize: '1.5rem'}}
+          >
             Your ultimate source for high-rated movies, latest releases, and everything in between.
           </p>
         </div>
-      </section>
+      </div>
+
 
       {/* Main Content */}
       <div className="container" style={{ marginTop: '2rem' }}>
@@ -64,12 +92,21 @@ function HomePage() {
         <div className="modal is-active">
           <div className="modal-background" onClick={() => setSelectedMovie(null)}></div>
           <div className="modal-content box">
-            <h2 className="title has-text-black">{selectedMovie.title || "No Title Available"}</h2>
+            <h2 className="title">{selectedMovie.title || "No Title Available"}</h2>
             <p><strong>Rating:</strong> {selectedMovie.rating || "N/A"}</p>
-            <p><strong>Release Year:</strong> {selectedMovie.releaseDate || "Unknown"}</p>
+            <p><strong>Release Year:</strong> {selectedMovie.year || "Unknown"}</p>
             <p><strong>Plot:</strong> {selectedMovie.plot || "No description available."}</p>
-            <button className="button is-danger" onClick={() => setSelectedMovie(null)}>Close</button>
-          </div>
+            <button 
+              className="button is-danger mt-4" 
+              onClick={() => setSelectedMovie(null)} 
+              style={{ 
+                backgroundColor: '#E1544B', 
+                borderColor: '#E1544B', 
+                color: 'white',
+              }}>
+                Close
+            </button>
+            </div>
         </div>
       )}
     </>

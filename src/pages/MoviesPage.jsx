@@ -78,17 +78,22 @@ function MoviesPage() {
 
   return (
     <div className="container">
-      {/* Search Bar (bigger, above) */}
+      {/* Search Bar*/}
       <div className="field" style={{ marginBottom: '1rem' }}>
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
 
-      {/* Filter Button (below search bar, aligned right) */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+      {/* Filter Button*/}
+      <div className="grid-container" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <div className={`dropdown ${isDropdownOpen ? 'is-active' : ''}`}>
           <div className="dropdown-trigger">
             <button
-              className="button is-medium"
+              className="button"
+              style={{ 
+                backgroundColor: '#6B7280', 
+                borderColor: '#6B7280', 
+                color: 'white',
+              }}
               aria-haspopup="true"
               aria-controls="dropdown-menu"
               onClick={toggleDropdown}
@@ -145,14 +150,23 @@ function MoviesPage() {
         <div className="modal is-active">
           <div className="modal-background" onClick={() => setSelectedMovie(null)}></div>
           <div className="modal-content box">
-            <h2 className="title has-text-black">
+            <h2 className="title">
               {selectedMovie.title || "No Title Available"}
             </h2>
             <p><strong>Rating:</strong> {selectedMovie.rating || "N/A"}</p>
             <p><strong>Year:</strong> {selectedMovie.year || "Unknown"}</p>
             <p><strong>Plot:</strong> {selectedMovie.plot || "No description available."}</p>
-            <button className="button is-danger" onClick={() => setSelectedMovie(null)}>Close</button>
-          </div>
+            <button 
+              className="button is-danger mt-4" 
+              onClick={() => setSelectedMovie(null)} 
+              style={{ 
+                backgroundColor: '#E1544B', 
+                borderColor: '#E1544B', 
+                color: 'white',
+              }}>
+                Close
+            </button>
+            </div>
         </div>
       )}
     </div>

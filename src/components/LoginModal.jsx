@@ -57,7 +57,11 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
 
             {error && <p className="has-text-danger">{error}</p>}
 
-            <button className="button is-primary" type="submit">Login</button>
+            <button className="button is-primary" type="submit" style={{ 
+                      backgroundColor: '#E1544B', 
+                      borderColor: '#E1544B', 
+                      color: 'white',
+                    }}>Login</button>
           </form>
         </section>
       </div>

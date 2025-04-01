@@ -77,21 +77,19 @@ header {
 
 /* Custom Pagination Button Colors */
 .custom-pagination-button {
-    background-color: #ff6347 !important; /* Tomato Red */
+    background-color: #6B7280 !important; 
     color: white !important; /* White Text */
     border: none;
     transition: background-color 0.3s ease;
   }
   
   .custom-pagination-button:hover {
-    background-color: #ff4500 !important; /* Darker Red */
+    background-color: #6B7280 !important;
   }
   
   /* Active Page Button */
   .custom-pagination-active {
-    background-color: #007bff !important; /* Blue */
+    background-color: #D1D5DB !important;
     color: white !important;
     font-weight: bold;
   }
-  
-  
