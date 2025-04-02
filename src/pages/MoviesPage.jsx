@@ -1,3 +1,13 @@
+/**
+ * MoviesPage Component
+ * ---------------------
+ * Displays all movies from the database with search, sorting, and pagination capabilities.
+ * Also includes a modal to show detailed information about a selected movie.
+ *
+ * Props:
+ * - user: The currently authenticated user (used by the MovieDetailsModal).
+ */
+
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -6,7 +16,7 @@ import Pagination from '../components/Pagination';
 import SearchBar from '../components/SearchBar';
 import MovieDetailsModal from '../components/MovieDetailsModal';
 
-function MoviesPage({ user }) {  // Accept the user prop here
+function MoviesPage({ user }) {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,6 +27,9 @@ function MoviesPage({ user }) {  // Accept the user prop here
 
   const moviesPerPage = 18;
 
+  /**
+   * Fetch all movies from Firestore on initial mount.
+   */
   useEffect(() => {
     const fetchMovies = async () => {
       setIsLoading(true);
@@ -32,24 +45,24 @@ function MoviesPage({ user }) {  // Accept the user prop here
     fetchMovies();
   }, []);
 
-  // Toggle dropdown
+  // Toggle the filter dropdown visibility
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Handle sorting
+  // Handle sorting when user selects a filter option
   const handleSort = (method) => {
     setSortMethod(method);
     setIsDropdownOpen(false);
     setCurrentPage(1);
   };
 
-  // Filter movies by search term
+  // Filter movies based on search input
   let filteredMovies = movies.filter(movie =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Sort movies based on the chosen method
+  // Apply sorting logic
   if (sortMethod === 'az') {
     filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sortMethod === 'za') {
@@ -68,20 +81,23 @@ function MoviesPage({ user }) {  // Accept the user prop here
 
   return (
     <div className="container">
-      {/* Search Bar */}
+      {/* Search input */}
       <div className="field" style={{ marginBottom: '1rem' }}>
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
 
-      {/* Filter Button */}
-      <div className="grid-container" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+      {/* Sorting dropdown */}
+      <div
+        className="grid-container"
+        style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}
+      >
         <div className={`dropdown ${isDropdownOpen ? 'is-active' : ''}`}>
           <div className="dropdown-trigger">
             <button
               className="button"
-              style={{ 
-                backgroundColor: '#6B7280', 
-                borderColor: '#6B7280', 
+              style={{
+                backgroundColor: '#6B7280',
+                borderColor: '#6B7280',
                 color: 'white'
               }}
               aria-haspopup="true"
@@ -113,6 +129,7 @@ function MoviesPage({ user }) {  // Accept the user prop here
         </div>
       </div>
 
+      {/* Movie grid or loading/empty states */}
       {isLoading ? (
         <p>Loading movies...</p>
       ) : filteredMovies.length > 0 ? (
@@ -136,7 +153,7 @@ function MoviesPage({ user }) {  // Accept the user prop here
         <p>No movies found.</p>
       )}
 
-      {/* Pass the user prop to the modal */}
+      {/* Modal for viewing movie details */}
       <MovieDetailsModal 
         movie={selectedMovie}
         onClose={() => setSelectedMovie(null)}
