@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import MovieCard from '../components/MovieCard';
+import MovieDetailsModal from '../components/MovieDetailsModal';
 
-function HomePage() {
+function HomePage({ user }) {  // Accept the user prop here
   const [topMovies, setTopMovies] = useState([]);
   const [latestMovies, setLatestMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -17,8 +18,12 @@ function HomePage() {
         ...doc.data()
       }));
 
-      const sortedByRating = [...movieList].sort((a, b) => b.rating - a.rating).slice(0, 5);
-      const sortedByDate = [...movieList].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)).slice(0, 8);
+      const sortedByRating = [...movieList]
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 5);
+      const sortedByDate = [...movieList]
+        .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate))
+        .slice(0, 8);
 
       setTopMovies(sortedByRating);
       setLatestMovies(sortedByDate);
@@ -29,7 +34,7 @@ function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <div 
+      <div
         style={{
           backgroundImage: 'url("/hero-background.png")',
           backgroundSize: 'cover',
@@ -39,32 +44,31 @@ function HomePage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          padding: 0,           
-          margin: 0,              
-          width: '100%'                
+          padding: 0,
+          margin: 0,
+          width: '100%'
         }}
       >
-        <div 
+        <div
           style={{
             maxWidth: '600px',
             textAlign: 'left',
             paddingLeft: '10vw'
           }}
         >
-          <img 
-            src="/film-fusion-hero-logo.png" 
+          <img
+            src="/film-fusion-hero-logo.png"
             alt="Film Fusion Hero Logo"
-            style={{ maxWidth: '600px', width: '100%', display: 'block'}}
+            style={{ maxWidth: '600px', width: '100%', display: 'block' }}
           />
-          <p 
+          <p
             className="subtitle has-text-white mt-6"
-            style={{ fontSize: '1.5rem'}}
+            style={{ fontSize: '1.5rem' }}
           >
             Your ultimate source for high-rated movies, latest releases, and everything in between.
           </p>
         </div>
       </div>
-
 
       {/* Main Content */}
       <div className="container" style={{ marginTop: '2rem' }}>
@@ -87,28 +91,12 @@ function HomePage() {
         </div>
       </div>
 
-      {/* Movie Details Modal */}
-      {selectedMovie && (
-        <div className="modal is-active">
-          <div className="modal-background" onClick={() => setSelectedMovie(null)}></div>
-          <div className="modal-content box">
-            <h2 className="title">{selectedMovie.title || "No Title Available"}</h2>
-            <p><strong>Rating:</strong> {selectedMovie.rating || "N/A"}</p>
-            <p><strong>Release Year:</strong> {selectedMovie.year || "Unknown"}</p>
-            <p><strong>Plot:</strong> {selectedMovie.plot || "No description available."}</p>
-            <button 
-              className="button is-danger mt-4" 
-              onClick={() => setSelectedMovie(null)} 
-              style={{ 
-                backgroundColor: '#E1544B', 
-                borderColor: '#E1544B', 
-                color: 'white',
-              }}>
-                Close
-            </button>
-            </div>
-        </div>
-      )}
+      {/* Pass the user prop to the modal */}
+      <MovieDetailsModal 
+        movie={selectedMovie} 
+        onClose={() => setSelectedMovie(null)}
+        user={user}
+      />
     </>
   );
 }

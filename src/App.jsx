@@ -4,8 +4,8 @@ import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
 import FavoritesPage from './pages/FavoritesPage';
-import LoginModal from './components/LoginModal'; // Import Login Modal
-import SignupModal from './components/SIgnupModal'; // Import Signup Modal
+import LoginModal from './components/LoginModal';
+import SignupModal from './components/SignupModal';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebase'; 
 import './styles.css';
@@ -22,28 +22,33 @@ function App() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginUsername, loginPassword);
       const user = userCredential.user;
-
-      setLoggedInUser(user.email); 
-      setShowLogin(false); 
+      // Store the entire user object (with uid)
+      setLoggedInUser(user); 
+      setShowLogin(false);
       setLoginUsername('');
       setLoginPassword('');
     } catch (error) {
-      console.error(error.message); 
+      console.error(error.message);
     }
   };
 
   const handleLogout = () => {
-    setLoggedInUser(null); 
+    setLoggedInUser(null);
   };
 
   return (
     <Router>
-      <Header loggedInUser={loggedInUser} setShowLogin={setShowLogin} setShowSignup={setShowSignup} handleLogout={handleLogout} />
+      <Header 
+        loggedInUser={loggedInUser} 
+        setShowLogin={setShowLogin} 
+        setShowSignup={setShowSignup} 
+        handleLogout={handleLogout} 
+      />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/movies" element={<MoviesPage />} />
-        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/" element={<HomePage user={loggedInUser}/>} />
+        <Route path="/movies" element={<MoviesPage user={loggedInUser} />} />
+        <Route path="/favorites" element={<FavoritesPage user={loggedInUser} />} />
       </Routes>
 
       {/* Login & Sign Up Modals */}
@@ -58,9 +63,7 @@ function App() {
           setLoggedInUser={setLoggedInUser} 
         />
       )}
-      {showSignup && (
-        <SignupModal setShowSignup={setShowSignup} />
-      )}
+      {showSignup && <SignupModal setShowSignup={setShowSignup} />}
     </Router>
   );
 }

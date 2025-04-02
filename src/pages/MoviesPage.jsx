@@ -4,16 +4,15 @@ import { db } from '../firebase';
 import MovieCard from '../components/MovieCard';
 import Pagination from '../components/Pagination';
 import SearchBar from '../components/SearchBar';
+import MovieDetailsModal from '../components/MovieDetailsModal';
 
-function MoviesPage() {
+function MoviesPage({ user }) {  // Accept the user prop here
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [sortMethod, setSortMethod] = useState(null);
-
-  // For dropdown toggle
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const moviesPerPage = 18;
@@ -41,49 +40,40 @@ function MoviesPage() {
   // Handle sorting
   const handleSort = (method) => {
     setSortMethod(method);
-    setIsDropdownOpen(false); // Close dropdown after selection
-    setCurrentPage(1);        // Reset to page 1 when sorting changes
+    setIsDropdownOpen(false);
+    setCurrentPage(1);
   };
 
-  // 1) Filter by search term
+  // Filter movies by search term
   let filteredMovies = movies.filter(movie =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // 2) Sort based on the chosen method
+  // Sort movies based on the chosen method
   if (sortMethod === 'az') {
     filteredMovies.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sortMethod === 'za') {
     filteredMovies.sort((a, b) => b.title.localeCompare(a.title));
   } else if (sortMethod === 'earliest') {
-    filteredMovies.sort((a, b) => Number(a.year) - Number(b.year)); // Earliest to Latest
+    filteredMovies.sort((a, b) => Number(a.year) - Number(b.year));
   } else if (sortMethod === 'latest') {
-    filteredMovies.sort((a, b) => Number(b.year) - Number(a.year)); // Latest to Earliest
+    filteredMovies.sort((a, b) => Number(b.year) - Number(a.year));
   }
 
-  // 3) Pagination
+  // Pagination logic
   const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
   const indexOfLastMovie = currentPage * moviesPerPage;
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
   const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
 
-  const handleToggleMovie = (movie) => {
-    if (selectedMovie && selectedMovie.id === movie.id){
-      setSelectedMovie(null)
-    }
-    else{
-      setSelectedMovie(movie);
-    }
-  }
-
   return (
     <div className="container">
-      {/* Search Bar*/}
+      {/* Search Bar */}
       <div className="field" style={{ marginBottom: '1rem' }}>
         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
 
-      {/* Filter Button*/}
+      {/* Filter Button */}
       <div className="grid-container" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <div className={`dropdown ${isDropdownOpen ? 'is-active' : ''}`}>
           <div className="dropdown-trigger">
@@ -92,7 +82,7 @@ function MoviesPage() {
               style={{ 
                 backgroundColor: '#6B7280', 
                 borderColor: '#6B7280', 
-                color: 'white',
+                color: 'white'
               }}
               aria-haspopup="true"
               aria-controls="dropdown-menu"
@@ -132,7 +122,6 @@ function MoviesPage() {
               <MovieCard
                 key={movie.id}
                 movie={movie}
-                selectedMovieId={selectedMovie ? selectedMovie.id : null}
                 handleClick={() => setSelectedMovie(movie)}
               />
             ))}
@@ -146,29 +135,13 @@ function MoviesPage() {
       ) : (
         <p>No movies found.</p>
       )}
-      {selectedMovie && (
-        <div className="modal is-active">
-          <div className="modal-background" onClick={() => setSelectedMovie(null)}></div>
-          <div className="modal-content box">
-            <h2 className="title">
-              {selectedMovie.title || "No Title Available"}
-            </h2>
-            <p><strong>Rating:</strong> {selectedMovie.rating || "N/A"}</p>
-            <p><strong>Year:</strong> {selectedMovie.year || "Unknown"}</p>
-            <p><strong>Plot:</strong> {selectedMovie.plot || "No description available."}</p>
-            <button 
-              className="button is-danger mt-4" 
-              onClick={() => setSelectedMovie(null)} 
-              style={{ 
-                backgroundColor: '#E1544B', 
-                borderColor: '#E1544B', 
-                color: 'white',
-              }}>
-                Close
-            </button>
-            </div>
-        </div>
-      )}
+
+      {/* Pass the user prop to the modal */}
+      <MovieDetailsModal 
+        movie={selectedMovie}
+        onClose={() => setSelectedMovie(null)}
+        user={user}
+      />
     </div>
   );
 }
