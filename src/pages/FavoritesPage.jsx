@@ -28,8 +28,10 @@ function FavoritesPage({ user }) {
   }, [user]);
 
   return (
-    <div className="container">
-      <h1 className="title">Favorite Movies</h1>
+    <div className="container" style={{ paddingTop: '2rem' }}>
+      <h1 className="title has-text-black" style={{ borderBottom: '2px solid #E1544B', paddingBottom: '0.5rem' }}>
+        Favorite Movies
+      </h1>
       {!user ? (
         <p>Please log in to view your favorites.</p>
       ) : favoriteMovies.length === 0 ? (
@@ -50,7 +52,7 @@ function FavoritesPage({ user }) {
       <MovieDetailsModal 
         movie={selectedMovie}
         onClose={() => setSelectedMovie(null)}
-        user={user} // Pass the full user object here
+        user={user}
       />
     </div>
   );

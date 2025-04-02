@@ -14,7 +14,8 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      setLoggedInUser(user.displayName || user.email); 
+      // Store the full user object (instead of user.displayName || user.email)
+      setLoggedInUser(user); 
       setShowLogin(false); 
     } catch (error) {
       setError(error.message || 'Invalid credentials or user does not exist');

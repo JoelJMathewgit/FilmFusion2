@@ -5,6 +5,12 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
   const [dropdownActive, setDropdownActive] = useState(false);
   const navigate = useNavigate();
 
+  // Determine what to display: if loggedInUser is an object, show email or displayName; otherwise, use it directly.
+  const displayUser =
+    loggedInUser && typeof loggedInUser === 'object'
+      ? loggedInUser.displayName || loggedInUser.email
+      : loggedInUser;
+
   return (
     <nav className="navbar is-light" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
@@ -16,8 +22,6 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
           />
         </Link>
 
-
-        {/* Mobile Navbar Toggle */}
         <button
           className="navbar-burger"
           aria-label="menu"
@@ -33,14 +37,12 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
         </button>
       </div>
 
-      {/* Navbar Menu */}
       <div id="navbarBasicExample" className="navbar-menu">
         <div className="navbar-start">
           <Link className="navbar-item" to="/">Home</Link>
           <Link className="navbar-item" to="/movies">Movies</Link>
         </div>
 
-        {/* Right Side - Login & Sign Up */}
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
@@ -58,7 +60,7 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
                         color: 'white',
                       }}
                     >
-                      <span><strong>{loggedInUser}</strong></span>
+                      <span><strong>{displayUser}</strong></span>
                       <span className="icon is-small">
                         <i className="fas fa-angle-down" aria-hidden="true"></i>
                       </span>
@@ -84,7 +86,7 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
                         onClick={(e) => {
                           e.preventDefault();
                           setDropdownActive(false);
-                          navigate('/favorites')
+                          navigate('/favorites');
                         }}
                       >
                         Favorite Movies
@@ -100,7 +102,6 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
                   >
                     Log in
                   </button>
-
                   <button 
                     className="button"
                     style={{ 

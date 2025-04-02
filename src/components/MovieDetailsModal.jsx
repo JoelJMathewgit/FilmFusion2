@@ -51,11 +51,12 @@ const MovieDetailsModal = ({ movie, onClose, user }) => {
         setIsFavorite(false);
       } else {
         await setDoc(favDocRef, {
-          title: movie.title || "",
-          rating: movie.rating || "",
-          year: movie.year || "",
-          plot: movie.plot || ""
-        });
+            title: movie.title || "",
+            rating: movie.rating || "",
+            year: movie.year || "",
+            plot: movie.plot || "",
+            poster: movie.poster || movie.image || ""
+          });          
         setIsFavorite(true);
       }
     } catch (error) {
