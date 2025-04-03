@@ -1,9 +1,20 @@
+/**
+ * Pagination Component
+ * ---------------------
+ * Displays pagination controls (Previous, Next, Page Numbers).
+ *
+ * Props:
+ * - currentPage: The current active page number
+ * - totalPages: Total number of available pages
+ * - handlePageChange: Function to update the current page
+ */
+
 import React from 'react';
 
 const Pagination = ({ currentPage, totalPages, handlePageChange }) => {
   return (
     <nav className="pagination is-centered" role="navigation" aria-label="pagination">
-      {/* Previous Button */}
+      {/* Previous Page Button */}
       <button
         className="pagination-previous custom-pagination-button"
         onClick={() => handlePageChange(currentPage - 1)}
@@ -12,7 +23,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }) => {
         Previous
       </button>
 
-      {/* Next Button */}
+      {/* Next Page Button */}
       <button
         className="pagination-next custom-pagination-button"
         onClick={() => handlePageChange(currentPage + 1)}
@@ -21,7 +32,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }) => {
         Next
       </button>
 
-      {/* Page Numbers */}
+      {/* Page Number Buttons */}
       <ul className="pagination-list">
         {Array.from({ length: totalPages }, (_, index) => (
           <li key={index}>

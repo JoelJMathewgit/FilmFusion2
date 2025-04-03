@@ -1,3 +1,14 @@
+/**
+ * LoginModal Component
+ * ---------------------
+ * Handles user authentication via Firebase.
+ * Displays a modal with login form and error handling.
+ *
+ * Props:
+ * - setShowLogin: Function to toggle modal visibility
+ * - setLoggedInUser: Function to update parent with the authenticated user
+ */
+
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -7,6 +18,13 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  /**
+   * handleLogin
+   * ------------
+   * Authenticates user with Firebase.
+   * On success: updates parent with user object and closes modal.
+   * On failure: shows error message.
+   */
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -14,9 +32,8 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      // Store the full user object (instead of user.displayName || user.email)
-      setLoggedInUser(user); 
-      setShowLogin(false); 
+      setLoggedInUser(user);
+      setShowLogin(false);
     } catch (error) {
       setError(error.message || 'Invalid credentials or user does not exist');
     }
@@ -28,8 +45,13 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
       <div className="modal-card">
         <header className="modal-card-head">
           <p className="modal-card-title">Login</p>
-          <button className="delete" aria-label="close" onClick={() => setShowLogin(false)}></button>
+          <button
+            className="delete"
+            aria-label="close"
+            onClick={() => setShowLogin(false)}
+          ></button>
         </header>
+
         <section className="modal-card-body">
           <form onSubmit={handleLogin}>
             <div className="field">
@@ -58,11 +80,17 @@ const LoginModal = ({ setShowLogin, setLoggedInUser }) => {
 
             {error && <p className="has-text-danger">{error}</p>}
 
-            <button className="button is-primary" type="submit" style={{ 
-                      backgroundColor: '#E1544B', 
-                      borderColor: '#E1544B', 
-                      color: 'white',
-                    }}>Login</button>
+            <button
+              className="button is-primary"
+              type="submit"
+              style={{
+                backgroundColor: '#E1544B',
+                borderColor: '#E1544B',
+                color: 'white',
+              }}
+            >
+              Login
+            </button>
           </form>
         </section>
       </div>

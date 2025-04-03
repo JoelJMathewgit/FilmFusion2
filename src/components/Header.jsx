@@ -1,3 +1,18 @@
+/**
+ * Header Component
+ * -----------------
+ * Displays the navigation bar for the app, including:
+ * - Logo linking to homepage
+ * - Navigation links (Home, Movies)
+ * - Login/Signup buttons or User Dropdown (if logged in)
+ *
+ * Props:
+ * - loggedInUser: Current user object or string (used to display user info)
+ * - setShowLogin: Function to toggle Login modal
+ * - setShowSignup: Function to toggle Signup modal
+ * - handleLogout: Function to log the user out
+ */
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -5,7 +20,7 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
   const [dropdownActive, setDropdownActive] = useState(false);
   const navigate = useNavigate();
 
-  // Determine what to display: if loggedInUser is an object, show email or displayName; otherwise, use it directly.
+  // Extract a displayable name from the user object or string
   const displayUser =
     loggedInUser && typeof loggedInUser === 'object'
       ? loggedInUser.displayName || loggedInUser.email
@@ -47,6 +62,7 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
           <div className="navbar-item">
             <div className="buttons">
               {loggedInUser ? (
+                // Dropdown for logged-in user
                 <div className={`dropdown ${dropdownActive ? 'is-active' : ''}`}>
                   <div className="dropdown-trigger">
                     <button 
@@ -66,6 +82,7 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
                       </span>
                     </button>
                   </div>
+
                   <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
                       <a
@@ -95,6 +112,7 @@ const Header = ({ loggedInUser, setShowLogin, setShowSignup, handleLogout }) => 
                   </div>
                 </div>
               ) : (
+                // If not logged in, show login/signup buttons
                 <>
                   <button 
                     className="button is-light"

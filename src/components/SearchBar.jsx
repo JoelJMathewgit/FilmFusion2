@@ -1,3 +1,13 @@
+/**
+ * SearchBar Component
+ * --------------------
+ * Controlled input component for searching movies by keyword.
+ *
+ * Props:
+ * - searchTerm: Current value of the search input
+ * - setSearchTerm: Function to update the search term
+ */
+
 import React from 'react';
 
 const SearchBar = ({ searchTerm, setSearchTerm }) => (
