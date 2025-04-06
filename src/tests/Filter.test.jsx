@@ -1,11 +1,25 @@
+/**
+ * filter.test.jsx
+ * ----------------
+ * Unit tests for sorting and filtering behavior in <MoviesPage />.
+ *
+ * These tests validate:
+ * - A–Z and Z–A sorting by title
+ * - Sorting by release year (earliest → latest and latest → earliest)
+ * 
+ * The test uses a mocked Firestore environment and three predefined movies
+ * to evaluate dropdown filtering logic visually and functionally.
+ */
+
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import MoviesPage from '../pages/MoviesPage.jsx';
 import { collection, getDocs } from 'firebase/firestore';
 import { vi } from 'vitest';
 
-// -- Mock Firebase and Firestore functions
+// Mock Firebase and Firestore functions
 vi.mock('./firebase', () => ({ db: {} }));
+
 vi.mock('firebase/firestore', async () => {
   const actual = await vi.importActual('firebase/firestore');
   return {
@@ -15,8 +29,7 @@ vi.mock('firebase/firestore', async () => {
   };
 });
 
-// -- Mock movie data for sorting tests
-// We create three movies with distinct titles and release years to test sorting logic
+// Define mock movie data with different titles and years
 const mockMovies = [
   { id: '1', title: 'Beta', year: 2010, poster: 'beta.jpg', plot: 'Plot Beta', rating: 3 },
   { id: '2', title: 'Alpha', year: 2005, poster: 'alpha.jpg', plot: 'Plot Alpha', rating: 4 },
@@ -24,7 +37,7 @@ const mockMovies = [
 ];
 
 describe('MoviesPage Sorting Dropdown', () => {
-  // Before each test, reset mocks and set Firestore to return our mock movie data
+  // Set up Firestore mock before each test
   beforeEach(() => {
     vi.clearAllMocks();
     collection.mockReturnValue('moviesCollection');
@@ -33,75 +46,64 @@ describe('MoviesPage Sorting Dropdown', () => {
     });
   });
 
-  // Helper function to open the dropdown and select a sort option
+  /**
+   * Utility: Open the filter dropdown and select a sorting option
+   */
   const openDropdownAndSort = async (optionText) => {
-    // Wait until the "Loading movies..." indicator is gone indicating movies have loaded
     await waitFor(() => expect(screen.queryByText(/Loading movies/i)).not.toBeInTheDocument());
-    // Click the "Filter" button to open the dropdown
     fireEvent.click(screen.getByText(/Filter/i));
-    // Click the sort option provided by the test
     fireEvent.click(screen.getByText(optionText));
   };
 
-  // PART: Sorting Alphabetically A–Z
+  /**
+   * Test: Sort movies alphabetically A–Z
+   */
   test('sorts movies alphabetically A–Z', async () => {
-    // Render the MoviesPage component
     const { container } = render(<MoviesPage />);
-    // Open dropdown and choose the "A–Z" option
     await openDropdownAndSort('A–Z');
 
-    // Get the list of movie cards rendered on the page
     const movieCards = container.getElementsByClassName('movie-card');
-    // Expected order: Alpha, Beta, Gamma (alphabetical order)
     expect(movieCards[0]).toHaveTextContent('Alpha');
     expect(movieCards[1]).toHaveTextContent('Beta');
     expect(movieCards[2]).toHaveTextContent('Gamma');
   });
 
-  // PART: Sorting Alphabetically Z–A
+  /**
+   * Test: Sort movies alphabetically Z–A
+   */
   test('sorts movies alphabetically Z–A', async () => {
-    // Render the MoviesPage component
     const { container } = render(<MoviesPage />);
-    // Open dropdown and choose the "Z–A" option
     await openDropdownAndSort('Z–A');
 
-    // Get the rendered movie cards
     const movieCards = container.getElementsByClassName('movie-card');
-    // Expected order: Gamma, Beta, Alpha (reverse alphabetical order)
     expect(movieCards[0]).toHaveTextContent('Gamma');
     expect(movieCards[1]).toHaveTextContent('Beta');
     expect(movieCards[2]).toHaveTextContent('Alpha');
   });
 
-  // PART: Sorting by Release Year (Earliest to Latest)
+  /**
+   * Test: Sort by release year ascending
+   */
   test('sorts movies by release year from earliest to latest', async () => {
-    // Render the MoviesPage component
     const { container } = render(<MoviesPage />);
-    // Open dropdown and select the "Earliest to Latest" option
     await openDropdownAndSort('Earliest to Latest');
 
-    // Get the rendered movie cards
     const movieCards = container.getElementsByClassName('movie-card');
-    // Expected order by release year ascending:
-    // Alpha (2005), Beta (2010), Gamma (2015)
-    expect(movieCards[0]).toHaveTextContent('Alpha');
-    expect(movieCards[1]).toHaveTextContent('Beta');
-    expect(movieCards[2]).toHaveTextContent('Gamma');
+    expect(movieCards[0]).toHaveTextContent('Alpha'); // 2005
+    expect(movieCards[1]).toHaveTextContent('Beta');  // 2010
+    expect(movieCards[2]).toHaveTextContent('Gamma'); // 2015
   });
 
-  // PART: Sorting by Release Year (Latest to Earliest)
+  /**
+   * Test: Sort by release year descending
+   */
   test('sorts movies by release year from latest to earliest', async () => {
-    // Render the MoviesPage component
     const { container } = render(<MoviesPage />);
-    // Open dropdown and choose the "Latest to Earliest" option
     await openDropdownAndSort('Latest to Earliest');
 
-    // Get the rendered movie cards
     const movieCards = container.getElementsByClassName('movie-card');
-    // Expected order by release year descending:
-    // Gamma (2015), Beta (2010), Alpha (2005)
-    expect(movieCards[0]).toHaveTextContent('Gamma');
-    expect(movieCards[1]).toHaveTextContent('Beta');
-    expect(movieCards[2]).toHaveTextContent('Alpha');
+    expect(movieCards[0]).toHaveTextContent('Gamma'); // 2015
+    expect(movieCards[1]).toHaveTextContent('Beta');  // 2010
+    expect(movieCards[2]).toHaveTextContent('Alpha'); // 2005
   });
 });

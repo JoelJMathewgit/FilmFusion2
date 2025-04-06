@@ -1,3 +1,15 @@
+/* ==========================================================================
+   styles.css – Global Custom Styles for Film Fusion
+   ==========================================================================
+   This file contains custom global styles used throughout the app:
+   - Body/reset and base colors
+   - Layout helpers for grid/search
+   - Styling for movie cards and pagination
+   - Custom login modal and input styling
+
+   These styles complement Bulma's default utility classes.
+   ========================================================================== */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;

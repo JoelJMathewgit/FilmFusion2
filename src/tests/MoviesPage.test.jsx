@@ -1,14 +1,24 @@
+/**
+ * MoviesPage.test.jsx
+ * ---------------------
+ * Full behavioral test suite for the <MoviesPage /> component.
+ *
+ * Tests:
+ * - Loading state and initial render
+ * - Search filter functionality
+ * - Modal toggle on "Show Details"
+ * - Pagination with next/previous navigation
+ */
+
 import React from 'react';
 import { describe, test, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { collection, getDocs } from 'firebase/firestore';
 import MoviesPage from '../pages/MoviesPage.jsx';
+import { collection, getDocs } from 'firebase/firestore';
 
-// -- Mock Firebase
+// Mock Firebase Firestore connection
 vi.mock('./firebase', () => ({ db: {} }));
-
-// -- Mock Firestore calls
 vi.mock('firebase/firestore', async () => {
   const actual = await vi.importActual('firebase/firestore');
   return {
@@ -18,7 +28,7 @@ vi.mock('firebase/firestore', async () => {
   };
 });
 
-// Create mock movie data: 20 entries with incremental fields
+// Mock 20 unique movie documents
 const mockMovies = Array.from({ length: 20 }, (_, i) => ({
   id: String(i + 1),
   title: `Movie ${i + 1}`,
@@ -29,7 +39,9 @@ const mockMovies = Array.from({ length: 20 }, (_, i) => ({
 }));
 
 describe('MoviesPage', () => {
-  // Reset mocks and set return values before each test
+  /**
+   * Setup: Mock Firestore response with movie list
+   */
   beforeEach(() => {
     vi.clearAllMocks();
     collection.mockReturnValue('moviesCollection');
@@ -38,74 +50,79 @@ describe('MoviesPage', () => {
     });
   });
 
-  // PART 1: Loading State & Movie Rendering
-
+  /**
+   * Test: Loading state and movie rendering
+   */
   test('displays loading then renders movies', async () => {
     render(<MoviesPage />);
 
-    // Expect loading indicator initially
     expect(screen.getByText(/Loading movies.../i)).toBeInTheDocument();
 
-    // Wait for loading indicator to disappear after data load
-    await waitFor(() => expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument()
+    );
 
-    // Verify first page renders 18 movies
+    // First 18 movies should render on page 1
     for (let i = 1; i <= 18; i++) {
       expect(screen.getByText(`Movie ${i}`)).toBeInTheDocument();
     }
 
-    // Movie 19 should not be rendered on the first page
+    // Ensure Movie 19 is not shown on first page
     expect(screen.queryByText('Movie 19')).not.toBeInTheDocument();
   });
 
-  // PART 2: Filtering Movies
-
+  /**
+   * Test: Filtering search by movie title
+   */
   test('filters movies by search term', async () => {
     render(<MoviesPage />);
-    await waitFor(() => expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument()
+    );
 
-    // Type search term
-    fireEvent.change(screen.getByPlaceholderText(/search movies/i), { target: { value: 'Movie 5' } });
+    fireEvent.change(screen.getByPlaceholderText(/search movies/i), {
+      target: { value: 'Movie 5' },
+    });
 
-    // Only matching movie should be visible
     expect(screen.getByText('Movie 5')).toBeInTheDocument();
     expect(screen.queryByText('Movie 1')).not.toBeInTheDocument();
   });
 
-  // PART 3: Toggling Movie Details
+  /**
+   * Test: Toggle modal by clicking "Show Details" and closing
+   */
   test('toggles movie details on click', async () => {
     render(<MoviesPage />);
-    await waitFor(() => expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument()
+    );
 
-    // Get all "Show Details" buttons
     const showButtons = screen.getAllByRole('button', { name: /Show Details/i });
-
-    // Open modal for first movie
     fireEvent.click(showButtons[0]);
 
-    // Close modal button reference
     const closeButton = screen.getByRole('button', { name: /Close/i });
     const modalContent = closeButton.closest('.modal-content');
 
-    // Verify modal displays correct plot
     expect(within(modalContent).getByText(/Plot for Movie 1/)).toBeInTheDocument();
 
-    // Close the modal
     fireEvent.click(closeButton);
-    await waitFor(() => expect(screen.queryByRole('button', { name: /Close/i })).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole('button', { name: /Close/i })).not.toBeInTheDocument()
+    );
   });
 
-  // PART 4: Pagination
-
-  test('pagination:  next/previous buttons change pages', async () => {
+  /**
+   * Test: Pagination with next and previous navigation
+   */
+  test('pagination: next/previous buttons change pages', async () => {
     render(<MoviesPage />);
-    await waitFor(() => expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByText(/Loading movies.../i)).not.toBeInTheDocument()
+    );
 
-    // Navigate to next page
     fireEvent.click(screen.getByText('Next'));
     expect(screen.getByText('Movie 19')).toBeInTheDocument();
 
-    // Navigate back to previous page
     fireEvent.click(screen.getByText('Previous'));
     expect(screen.getByText('Movie 1')).toBeInTheDocument();
   });
