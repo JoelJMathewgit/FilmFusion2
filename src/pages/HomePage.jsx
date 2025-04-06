@@ -49,7 +49,7 @@ function HomePage({ user }) {
 
       // Get latest 8 movies by release date
       const sortedByDate = [...movieList]
-        .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate))
+        .sort((a, b) => new Date(b.year) - new Date(a.year))
         .slice(0, 8);
 
       setTopMovies(sortedByRating);
