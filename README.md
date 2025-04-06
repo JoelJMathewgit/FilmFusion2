@@ -15,6 +15,10 @@ Sk Akif Rahman (Software Quality Lead)
 
 The goal of the project was to simulate the experience of building a full-stack production-ready app using modern technologies, but in a way that is accessible and deployable for classroom grading or demonstration.
 
+The project has been deployed online. Please use the link below to go to the vercel deployment: 
+
+[https://filmfusion-lqiu.vercel.app/](https://filmfusion-lqiu.vercel.app/)
+
 ---
 
 ## Features
@@ -90,7 +94,7 @@ run.bat //Command Prompt
 
 This will automatically install all dependencies and start the local development server at:
 
-```bash
+```
 http://localhost:5173
 ```
 
@@ -110,8 +114,15 @@ npm run dev
 
 Open your browser and go to:
 
-```bash
+```
 http://localhost:5173
+```
+### Option 3: Deployed Web-App (No Code Visible)
+
+- Go to the web app link: 
+
+```
+https://filmfusion-lqiu.vercel.app/
 ```
 
 ## Acknowledgements
