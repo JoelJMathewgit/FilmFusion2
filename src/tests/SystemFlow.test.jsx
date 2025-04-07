@@ -69,5 +69,48 @@ describe('SystemsFlow: Login and view favorited movies', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    // Mock successful login
+    signInWithEmailAndPassword.mockResolvedValue({ user: mockUser });
+ 
+    // Mock Firestore movie fetch
+    collection.mockReturnValue('moviesCollection');
+    getDocs.mockResolvedValue({ docs: [mockDocSnap] });
+
+    // Mock doc ref & setDoc for favorites
+    doc.mockReturnValue('mockDocRef');
+    setDoc.mockResolvedValue();
+  });
+
+  test('logs in, view favorited movies, and view movie details', async () => {
+    render(<App />);
+
+    // Open login modal
+    fireEvent.click(screen.getByText('Log in'));
+
+    // Fill login form and submit
+    fireEvent.change(screen.getByPlaceholderText('Enter Email'), {
+      target: { value: 'testuser@example.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter Password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    // Wait for login to complete (checks dropdown)
+    await waitFor(() => screen.getByText(/Test User/i));
+
+    // Navigate to Favorite Movies
+    fireEvent.click(screen.getByText('Favorite Movies'));
+
+    // Wait for movie to load
+    await waitFor(() => screen.getByText('Test Movie'));
+
+    // Open movie modal
+    fireEvent.click(screen.getByRole('button', { name: /Show Details/i }));
+
+    // Confirm modal shows expected content
+    expect(screen.getByText(/Test Plot/)).toBeInTheDocument();
+  });
+});
     // Auth: successful login mock
     signInWithEmailAndPassword
